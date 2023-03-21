@@ -20,7 +20,7 @@ public final class EventDispatcher {
         assert(processors.isEmpty || processors.contains(where: \.isTechnical))
     }
 
-    private func make<Body: Encodable>(with body: Body) throws -> EventProcessor.Properties {
+    private func make(with body: some Encodable) throws -> EventProcessor.Properties {
         let data = try JSONEncoder().encode(body)
         let json = try JSONSerialization.jsonObject(with: data, options: [])
         if let value = json as? EventProcessor.Properties {
@@ -42,11 +42,11 @@ extension EventDispatcher: EventDispatching {
         }
     }
 
-    public func send<B: Encodable>(_ name: EventName, body: B) {
+    public func send(_ name: EventName, body: some Encodable) {
         queue.async { [self] in
             do {
                 let props = try make(with: body)
-                for processor in self.processors {
+                for processor in processors {
                     processor.send(name, properties: props)
                 }
             } catch {
@@ -59,7 +59,7 @@ extension EventDispatcher: EventDispatching {
         queue.async { [self] in
             do {
                 let props = try make(with: event)
-                let processors = self.processors.filter(\.isTechnical)
+                let processors = processors.filter(\.isTechnical)
                 for processor in processors {
                     processor.send(Event.name, properties: props)
                 }
@@ -69,10 +69,10 @@ extension EventDispatcher: EventDispatching {
         }
     }
 
-    public func send<Event: CustomizableEvent>(_ event: Event) {
+    public func send(_ event: some CustomizableEvent) {
         queue.async { [self] in
             do {
-                for processor in self.processors {
+                for processor in processors {
                     if let event = event.customized(for: processor.name) {
                         let props = try make(with: event.body)
                         processor.send(event.name, properties: props)

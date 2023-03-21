@@ -7,7 +7,7 @@ public struct EventProcessorName: Equatable {
         self.name = name
     }
 
-    public static func generate<T>(for type: T.Type) -> EventProcessorName {
+    public static func generate(for type: (some Any).Type) -> EventProcessorName {
         return .init(name: String(reflecting: type))
     }
 }

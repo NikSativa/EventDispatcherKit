@@ -4,14 +4,17 @@ import PackageDescription
 
 let package = Package(
     name: "NEventDispatcher",
-    platforms: [.iOS(.v13), .macOS(.v10_15)],
+    platforms: [
+        .iOS(.v13),
+        .macOS(.v10_15)
+    ],
     products: [
         .library(name: "NEventDispatcher", targets: ["NEventDispatcher"]),
         .library(name: "NEventDispatcherTestHelpers", targets: ["NEventDispatcherTestHelpers"])
     ],
     dependencies: [
-        .package(url: "git@github.com:NikSativa/NQueue.git", .upToNextMajor(from: "1.1.11")),
-        .package(url: "git@github.com:NikSativa/NSpry.git", .upToNextMajor(from: "1.2.7")),
+        .package(url: "git@github.com:NikSativa/NQueue.git", .upToNextMajor(from: "1.1.17")),
+        .package(url: "git@github.com:NikSativa/NSpry.git", .upToNextMajor(from: "1.3.3")),
         .package(url: "git@github.com:Quick/Quick.git", .upToNextMajor(from: "6.1.0")),
         .package(url: "git@github.com:Quick/Nimble.git", .upToNextMajor(from: "11.2.1"))
     ],

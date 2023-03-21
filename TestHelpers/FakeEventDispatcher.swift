@@ -17,19 +17,19 @@ public final class FakeEventDispatcher: EventDispatching, Spryable {
         return spryify(arguments: userId)
     }
 
-    public func send<B: Encodable>(_ name: EventName, body: B) {
+    public func send(_ name: EventName, body: some Encodable) {
         return spryify(arguments: name, body)
     }
 
-    public func send<M: Event>(_ event: M) {
+    public func send(_ event: some Event) {
         return spryify(arguments: event)
     }
 
-    public func send<M: CustomizableEvent>(_ event: M) {
+    public func send(_ event: some CustomizableEvent) {
         return spryify(arguments: event)
     }
 
-    public func send<M: TechnicalEvent>(_ event: M) {
+    public func send(_ event: some TechnicalEvent) {
         return spryify(arguments: event)
     }
 }
