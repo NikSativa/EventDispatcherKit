@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.8
 // swiftformat:disable all
 import PackageDescription
 
@@ -6,17 +6,15 @@ let package = Package(
     name: "NEventDispatcher",
     platforms: [
         .iOS(.v13),
-        .macOS(.v10_15)
+        .macOS(.v11)
     ],
     products: [
         .library(name: "NEventDispatcher", targets: ["NEventDispatcher"]),
         .library(name: "NEventDispatcherTestHelpers", targets: ["NEventDispatcherTestHelpers"])
     ],
     dependencies: [
-        .package(url: "git@github.com:NikSativa/NQueue.git", .upToNextMajor(from: "1.1.17")),
-        .package(url: "git@github.com:NikSativa/NSpry.git", .upToNextMajor(from: "1.3.3")),
-        .package(url: "git@github.com:Quick/Quick.git", .upToNextMajor(from: "6.1.0")),
-        .package(url: "git@github.com:Quick/Nimble.git", .upToNextMajor(from: "11.2.1"))
+        .package(url: "git@github.com:NikSativa/NQueue.git", .upToNextMajor(from: "1.2.2")),
+        .package(url: "git@github.com:NikSativa/NSpry.git", .upToNextMajor(from: "2.1.1"))
     ],
     targets: [
         .target(name: "NEventDispatcher",
@@ -34,10 +32,7 @@ let package = Package(
                     dependencies: [
                         "NQueue",
                         .product(name: "NQueueTestHelpers", package: "NQueue"),
-                        "Quick",
-                        "Nimble",
                         "NSpry",
-                        .product(name: "NSpry_Nimble", package: "NSpry"),
                         "NEventDispatcher",
                         "NEventDispatcherTestHelpers"
                     ],
