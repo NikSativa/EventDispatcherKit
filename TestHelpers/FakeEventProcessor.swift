@@ -9,13 +9,19 @@ public final class FakeEventProcessor: EventProcessor, Spryable {
 
     public enum Function: String, StringRepresentable {
         case name
+        case isEnabled
         case isTechnical
         case send = "send(_:properties:)"
         case setUserId = "set(userId:)"
+        case setIsEnabled = "set(enabled:)"
     }
 
     public func set(userId: String?) {
         return spryify(arguments: userId)
+    }
+
+    public func set(enabled: Bool) {
+        return spryify(arguments: enabled)
     }
 
     public var name: EventProcessorName {
@@ -23,6 +29,10 @@ public final class FakeEventProcessor: EventProcessor, Spryable {
     }
 
     public var isTechnical: Bool {
+        return spryify()
+    }
+
+    public var isEnabled: Bool {
         return spryify()
     }
 

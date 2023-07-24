@@ -8,6 +8,10 @@ public final class FakeEventDispatcher: EventDispatching, Spryable {
     }
 
     public enum Function: String, StringRepresentable {
+        case isEnabled
+        case setIsEnabled = "set(enabled:)"
+        case setIsEnabledWithName = "set(enabled:for:)"
+
         case sendNamed = "send(_:body:)"
         case send = "send(_:)"
         case setUserId = "set(userId:)"
@@ -15,6 +19,18 @@ public final class FakeEventDispatcher: EventDispatching, Spryable {
 
     public func set(userId: String?) {
         return spryify(arguments: userId)
+    }
+
+    public var isEnabled: Bool {
+        return spryify()
+    }
+
+    public func set(enabled: Bool) {
+        return spryify(arguments: enabled)
+    }
+
+    public func set(enabled: Bool, for name: EventProcessorName) {
+        return spryify(arguments: enabled, name)
     }
 
     public func send(_ name: EventName, body: some Encodable) {

@@ -3,6 +3,8 @@ import Foundation
 public final class ConsoleEventProcessor {
     public typealias Logger = (Any...) -> Void
 
+    public private(set) var isEnabled: Bool = true
+
     private let logger: Logger
     private let prettyPrinted: Bool
 
@@ -36,6 +38,10 @@ extension ConsoleEventProcessor: EventProcessor {
 
     public func set(userId: String?) {
         logger(userId ?? "nil")
+    }
+
+    public func set(enabled: Bool) {
+        isEnabled = enabled
     }
 }
 

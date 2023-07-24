@@ -9,6 +9,7 @@ public final class EventDispatcher {
     private static let defaultQueue: Queueable = Queue.custom(label: "NEventDispatcher",
                                                               qos: .background,
                                                               attributes: .serial)
+    public private(set) var isEnabled: Bool = true
     private let processors: [EventProcessor]
     private let queue: Queueable
 
@@ -42,10 +43,31 @@ extension EventDispatcher: EventDispatching {
         }
     }
 
+    public func set(enabled: Bool) {
+        queue.async {
+            self.isEnabled = enabled
+        }
+    }
+
+    public func set(enabled: Bool, for name: EventProcessorName) {
+        queue.async {
+            for processor in self.processors {
+                if processor.name == name {
+                    processor.set(enabled: enabled)
+                }
+            }
+        }
+    }
+
     public func send(_ name: EventName, body: some Encodable) {
         queue.async { [self] in
+            guard isEnabled else {
+                return
+            }
+
             do {
                 let props = try make(with: body)
+                let processors = processors.filter(\.isEnabled)
                 for processor in processors {
                     processor.send(name, properties: props)
                 }
@@ -57,9 +79,13 @@ extension EventDispatcher: EventDispatching {
 
     public func send<Event: TechnicalEvent>(_ event: Event) {
         queue.async { [self] in
+            guard isEnabled else {
+                return
+            }
+
             do {
                 let props = try make(with: event)
-                let processors = processors.filter(\.isTechnical)
+                let processors = processors.filter(\.isTechnicalEnabled)
                 for processor in processors {
                     processor.send(Event.name, properties: props)
                 }
@@ -71,7 +97,12 @@ extension EventDispatcher: EventDispatching {
 
     public func send(_ event: some CustomizableEvent) {
         queue.async { [self] in
+            guard isEnabled else {
+                return
+            }
+
             do {
+                let processors = processors.filter(\.isEnabled)
                 for processor in processors {
                     if let event = event.customized(for: processor.name) {
                         let props = try make(with: event.body)
@@ -82,5 +113,11 @@ extension EventDispatcher: EventDispatching {
                 assertionFailure("can't serialize \(error.localizedDescription)\nbody: \(String(describing: event))")
             }
         }
+    }
+}
+
+private extension EventProcessor {
+    var isTechnicalEnabled: Bool {
+        return isTechnical && isEnabled
     }
 }

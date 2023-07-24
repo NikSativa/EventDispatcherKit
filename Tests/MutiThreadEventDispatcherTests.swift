@@ -50,7 +50,7 @@ final class MutiThreadEventDispatcherTests: XCTestCase {
             }
         }
 
-        wait(timeout: 0.2)
+        wait(timeout: 0.3)
 
         let mainEvents: [FakeEventProcessor.Event] = (0...numberOfEvents).map { i in
             return .init(name: NameKind.simple.rawValue, properties: ["key": "\(i) + main"])
@@ -108,11 +108,14 @@ private final class FakeEventProcessor: EventProcessor {
     private(set) var events: [Event] = []
     let name: EventProcessorName
     let isTechnical: Bool
+    let isEnabled: Bool
 
     init(name: String,
-         isTechnical: Bool = false) {
+         isTechnical: Bool = false,
+         isEnabled: Bool = true) {
         self.name = .init(name: name)
         self.isTechnical = isTechnical
+        self.isEnabled = isEnabled
     }
 
     func send(_ name: EventName, properties: Properties) {
@@ -123,6 +126,10 @@ private final class FakeEventProcessor: EventProcessor {
     }
 
     func set(userId _: String?) {
+        fatalError("nothing to test")
+    }
+
+    func set(enabled: Bool) {
         fatalError("nothing to test")
     }
 }

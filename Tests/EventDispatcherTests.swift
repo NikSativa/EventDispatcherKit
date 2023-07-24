@@ -33,12 +33,15 @@ final class EventDispatcherTests: XCTestCase {
 
         regularEventProcessor.stub(.name).andReturn(EventProcessorName.one)
         regularEventProcessor.stub(.isTechnical).andReturn(false)
+        regularEventProcessor.stub(.isEnabled).andReturn(true)
 
         technicalEventProcessor.stub(.name).andReturn(EventProcessorName.two)
         technicalEventProcessor.stub(.isTechnical).andReturn(true)
+        technicalEventProcessor.stub(.isEnabled).andReturn(true)
 
         regular2EventProcessor.stub(.name).andReturn(EventProcessorName.three)
         regular2EventProcessor.stub(.isTechnical).andReturn(false)
+        regular2EventProcessor.stub(.isEnabled).andReturn(true)
 
         queue.stub(.async).andDo { args in
             typealias VoidClosure = () -> Void
