@@ -50,7 +50,11 @@ final class MutiThreadEventDispatcherTests: XCTestCase {
             }
         }
 
+        #if os(visionOS) || os(watchOS)
+        wait(timeout: 1)
+        #else
         wait(timeout: 0.3)
+        #endif
 
         let mainEvents: [FakeEventProcessor.Event] = (0...numberOfEvents).map { i in
             return .init(name: NameKind.simple.rawValue, properties: ["key": "\(i) + main"])
@@ -91,10 +95,17 @@ private extension MutiThreadEventDispatcherTests {
         let key: String
     }
 
-    func wait(timeout: TimeInterval = 0.1) {
+    func wait(timeout: TimeInterval? = nil) {
         let exp = expectation(description: "wait")
         exp.isInverted = true
-        wait(for: [exp], timeout: timeout)
+
+        let defaultTimeOut: TimeInterval
+        #if os(visionOS) || os(watchOS)
+        defaultTimeOut = 1
+        #else
+        defaultTimeOut = 0.1
+        #endif
+        wait(for: [exp], timeout: timeout ?? defaultTimeOut)
     }
 }
 

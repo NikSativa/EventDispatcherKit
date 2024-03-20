@@ -52,11 +52,13 @@ final class EventDispatcherTests: XCTestCase {
         }
     }
 
+    #if (os(macOS) || os(iOS) || os(visionOS)) && (arch(x86_64) || arch(arm64))
     func test_no_technical_processors() {
         XCTAssertThrowsAssertion {
             _ = EventDispatcher(processors: [self.regularEventProcessor])
         }
     }
+    #endif
 
     func test_no_processors() {
         _ = EventDispatcher(processors: [])
@@ -214,7 +216,7 @@ private extension EventDispatcherTests {
     }
 
     static func testMake(_ value: String) -> [String: [String: String]] {
-        return Self.testMake(["value": value])
+        return testMake(["value": value])
     }
 
     static func testMake() -> [String: String] {

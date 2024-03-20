@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:5.7
 // swiftformat:disable all
 import PackageDescription
 
@@ -8,7 +8,6 @@ let package = Package(
         .iOS(.v13),
         .macOS(.v11),
         .macCatalyst(.v13),
-        .visionOS(.v1),
         .tvOS(.v13),
         .watchOS(.v6)
     ],
@@ -17,8 +16,8 @@ let package = Package(
         .library(name: "NEventDispatcherTestHelpers", targets: ["NEventDispatcherTestHelpers"])
     ],
     dependencies: [
-        .package(url: "https://github.com/NikSativa/NQueue.git", .upToNextMajor(from: "1.2.4")),
-        .package(url: "https://github.com/NikSativa/NSpry.git", .upToNextMajor(from: "2.1.4"))
+        .package(url: "git@github.com:NikSativa/NQueue.git", .upToNextMajor(from: "1.2.4")),
+        .package(url: "git@github.com:NikSativa/NSpry.git", .upToNextMajor(from: "2.1.4"))
     ],
     targets: [
         .target(name: "NEventDispatcher",
