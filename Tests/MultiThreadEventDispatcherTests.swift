@@ -7,7 +7,7 @@ import XCTest
 @testable import NEventDispatcherTestHelpers
 @testable import NQueueTestHelpers
 
-final class MutiThreadEventDispatcherTests: XCTestCase {
+final class MultiThreadEventDispatcherTests: XCTestCase {
     private let processor1: FakeEventProcessor = .init(name: "common")
     private let processor2: FakeEventProcessor = .init(name: "technical", isTechnical: true)
 
@@ -72,7 +72,7 @@ final class MutiThreadEventDispatcherTests: XCTestCase {
     }
 }
 
-private extension MutiThreadEventDispatcherTests {
+private extension MultiThreadEventDispatcherTests {
     enum NameKind: EventName {
         case simple = "simple event name"
         case technical = "technical event name"
@@ -146,21 +146,21 @@ private final class FakeEventProcessor: EventProcessor {
 }
 
 private extension FakeEventProcessor.Event {
-    static func testMake(name: MutiThreadEventDispatcherTests.NameKind = .simple,
-                         variant: MutiThreadEventDispatcherTests.Variant = .one) -> Self {
+    static func testMake(name: MultiThreadEventDispatcherTests.NameKind = .simple,
+                         variant: MultiThreadEventDispatcherTests.Variant = .one) -> Self {
         return .init(name: name.rawValue,
                      properties: ["key": variant.rawValue])
     }
 }
 
-private extension MutiThreadEventDispatcherTests.Event {
-    static func testMake(_ variant: MutiThreadEventDispatcherTests.Variant = .one) -> Self {
+private extension MultiThreadEventDispatcherTests.Event {
+    static func testMake(_ variant: MultiThreadEventDispatcherTests.Variant = .one) -> Self {
         return .init(key: variant.rawValue)
     }
 }
 
-private extension MutiThreadEventDispatcherTests.TechnicalEvent {
-    static func testMake(_ variant: MutiThreadEventDispatcherTests.Variant = .one) -> Self {
+private extension MultiThreadEventDispatcherTests.TechnicalEvent {
+    static func testMake(_ variant: MultiThreadEventDispatcherTests.Variant = .one) -> Self {
         return .init(key: variant.rawValue)
     }
 }
