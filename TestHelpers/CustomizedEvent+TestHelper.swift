@@ -1,6 +1,6 @@
 import Foundation
-import NEventDispatcher
-import NSpry
+import EventDispatcherKit
+import SpryKit
 
 // MARK: - CustomizedEvent + Equatable, SpryEquatable
 

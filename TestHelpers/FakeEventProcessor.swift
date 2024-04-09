@@ -1,6 +1,6 @@
 import Foundation
-import NEventDispatcher
-import NSpry
+import EventDispatcherKit
+import SpryKit
 
 public final class FakeEventProcessor: EventProcessor, Spryable {
     public enum ClassFunction: String, StringRepresentable {

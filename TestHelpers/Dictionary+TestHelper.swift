@@ -1,5 +1,5 @@
 import Foundation
-import NEventDispatcher
+import EventDispatcherKit
 
 public extension Dictionary {
     static func ==(lhs: Dictionary, rhs: Dictionary) -> Bool {

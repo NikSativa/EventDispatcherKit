@@ -1,5 +1,5 @@
 import Foundation
-import NEventDispatcher
-import NSpry
+import EventDispatcherKit
+import SpryKit
 
 extension EventName: SpryEquatable {}

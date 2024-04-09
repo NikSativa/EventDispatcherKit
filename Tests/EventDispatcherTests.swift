@@ -1,11 +1,11 @@
 import Foundation
-import NQueue
-import NSpry
+import Threading
+import SpryKit
 import XCTest
 
-@testable import NEventDispatcher
-@testable import NEventDispatcherTestHelpers
-@testable import NQueueTestHelpers
+@testable import EventDispatcherKit
+@testable import EventDispatcherKitTestHelpers
+@testable import ThreadingTestHelpers
 
 private extension EventProcessorName {
     static let one: Self = .init(name: "one")
@@ -154,13 +154,13 @@ final class EventDispatcherTests: XCTestCase {
 }
 
 private extension EventDispatcherTests {
-    struct EmptyEvent: NEventDispatcher.Event, SpryEquatable {
+    struct EmptyEvent: EventDispatcherKit.Event, SpryEquatable {
         static var name: EventName {
             return "empty"
         }
     }
 
-    struct Event: NEventDispatcher.Event, SpryEquatable {
+    struct Event: EventDispatcherKit.Event, SpryEquatable {
         static var name: EventName {
             return "simple"
         }
@@ -168,7 +168,7 @@ private extension EventDispatcherTests {
         let map: [String: String]
     }
 
-    struct TechnicalEvent: NEventDispatcher.TechnicalEvent, SpryEquatable {
+    struct TechnicalEvent: EventDispatcherKit.TechnicalEvent, SpryEquatable {
         static var name: EventName {
             return "technical"
         }
@@ -176,13 +176,13 @@ private extension EventDispatcherTests {
         let map: [String: String]
     }
 
-    struct EmptyCustomizableEvent: NEventDispatcher.CustomizableEvent, SpryEquatable, Encodable {
+    struct EmptyCustomizableEvent: EventDispatcherKit.CustomizableEvent, SpryEquatable, Encodable {
         func customized(for name: EventProcessorName) -> CustomizedEvent? {
             return .init(name: "empty customizable", body: self)
         }
     }
 
-    struct CustomizableEvent: NEventDispatcher.CustomizableEvent, SpryEquatable {
+    struct CustomizableEvent: EventDispatcherKit.CustomizableEvent, SpryEquatable {
         private struct Customizable: Encodable, SpryEquatable {
             let map: [String: String]
         }

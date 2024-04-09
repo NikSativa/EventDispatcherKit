@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "NEventDispatcher",
+    name: "EventDispatcherKit",
     platforms: [
         .iOS(.v13),
         .macOS(.v11),
@@ -12,38 +12,38 @@ let package = Package(
         .watchOS(.v6)
     ],
     products: [
-        .library(name: "NEventDispatcher", targets: ["NEventDispatcher"]),
-        .library(name: "NEventDispatcherTestHelpers", targets: ["NEventDispatcherTestHelpers"])
+        .library(name: "EventDispatcherKit", targets: ["EventDispatcherKit"]),
+        .library(name: "EventDispatcherKitTestHelpers", targets: ["EventDispatcherKitTestHelpers"])
     ],
     dependencies: [
-        .package(url: "git@github.com:NikSativa/NQueue.git", .upToNextMajor(from: "1.2.4")),
-        .package(url: "git@github.com:NikSativa/NSpry.git", .upToNextMajor(from: "2.1.4"))
+        .package(url: "git@github.com:NikSativa/Threading.git", .upToNextMajor(from: "1.2.4")),
+        .package(url: "git@github.com:NikSativa/SpryKit.git", .upToNextMajor(from: "2.1.4"))
     ],
     targets: [
-        .target(name: "NEventDispatcher",
+        .target(name: "EventDispatcherKit",
                 dependencies: [
-                    "NQueue"
+                    "Threading"
                 ],
                 path: "Sources",
                 resources: [
                     .copy("../PrivacyInfo.xcprivacy")
                 ]),
-        .target(name: "NEventDispatcherTestHelpers",
+        .target(name: "EventDispatcherKitTestHelpers",
                 dependencies: [
-                    "NEventDispatcher",
-                    "NSpry"
+                    "EventDispatcherKit",
+                    "SpryKit"
                 ],
                 path: "TestHelpers",
                 resources: [
                     .copy("../PrivacyInfo.xcprivacy")
                 ]),
-        .testTarget(name: "NEventDispatcherTests",
+        .testTarget(name: "EventDispatcherKitTests",
                     dependencies: [
-                        "NQueue",
-                        .product(name: "NQueueTestHelpers", package: "NQueue"),
-                        "NSpry",
-                        "NEventDispatcher",
-                        "NEventDispatcherTestHelpers"
+                        "Threading",
+                        .product(name: "ThreadingTestHelpers", package: "Threading"),
+                        "SpryKit",
+                        "EventDispatcherKit",
+                        "EventDispatcherKitTestHelpers"
                     ],
                     path: "Tests")
     ]

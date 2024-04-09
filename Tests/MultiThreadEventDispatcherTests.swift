@@ -1,11 +1,11 @@
 import Foundation
-import NQueue
-import NSpry
+import Threading
+import SpryKit
 import XCTest
 
-@testable import NEventDispatcher
-@testable import NEventDispatcherTestHelpers
-@testable import NQueueTestHelpers
+@testable import EventDispatcherKit
+@testable import EventDispatcherKitTestHelpers
+@testable import ThreadingTestHelpers
 
 final class MultiThreadEventDispatcherTests: XCTestCase {
     private let processor1: FakeEventProcessor = .init(name: "common")
@@ -85,12 +85,12 @@ private extension MultiThreadEventDispatcherTests {
         case four
     }
 
-    struct Event: NEventDispatcher.Event, Hashable, SpryEquatable {
+    struct Event: EventDispatcherKit.Event, Hashable, SpryEquatable {
         static let name: EventName = NameKind.simple.rawValue
         let key: String
     }
 
-    struct TechnicalEvent: NEventDispatcher.TechnicalEvent, SpryEquatable {
+    struct TechnicalEvent: EventDispatcherKit.TechnicalEvent, SpryEquatable {
         static let name: EventName = NameKind.technical.rawValue
         let key: String
     }

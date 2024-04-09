@@ -1,12 +1,12 @@
 import Foundation
-import NQueue
+import Threading
 
 public final class EventDispatcher {
     /// json root key when serialized properties are not eqvivalent of EventProcessor.Properties
     /// the result will look like **[rootKey: EventProcessor.Properties]**
     public static var rootKey: String = "body"
 
-    private static let defaultQueue: Queueable = Queue.custom(label: "NEventDispatcher",
+    private static let defaultQueue: Queueable = Queue.custom(label: "EventDispatcherKit",
                                                               qos: .background,
                                                               attributes: .serial)
     public private(set) var isEnabled: Bool = true
