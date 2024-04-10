@@ -1,5 +1,5 @@
-import Foundation
 import EventDispatcherKit
+import Foundation
 import SpryKit
 
 // MARK: - CustomizedEvent + Equatable, SpryEquatable
@@ -23,7 +23,7 @@ extension CustomizedEvent: Equatable, SpryEquatable {
 private extension CustomizedEvent {
     var prettyBody: String? {
         let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
         if let data = try? encoder.encode(body) {
             let str = String(data: data, encoding: .utf8)
             return str

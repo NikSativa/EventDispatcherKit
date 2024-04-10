@@ -21,8 +21,8 @@ public final class EventDispatcher {
         assert(processors.isEmpty || processors.contains(where: \.isTechnical))
     }
 
-    private func make(with body: some Encodable) throws -> EventProcessor.Properties {
-        let data = try JSONEncoder().encode(body)
+    private func make(with body: some Encodable, encoder: JSONEncoder) throws -> EventProcessor.Properties {
+        let data = try encoder.encode(body)
         let json = try JSONSerialization.jsonObject(with: data, options: [])
         if let value = json as? EventProcessor.Properties {
             return value
@@ -59,14 +59,14 @@ extension EventDispatcher: EventDispatching {
         }
     }
 
-    public func send(_ name: EventName, body: some Encodable) {
+    public func send(_ name: EventName, body: some Encodable, encoder: JSONEncoder) {
         queue.async { [self] in
             guard isEnabled else {
                 return
             }
 
             do {
-                let props = try make(with: body)
+                let props = try make(with: body, encoder: encoder)
                 let processors = processors.filter(\.isEnabled)
                 for processor in processors {
                     processor.send(name, properties: props)
@@ -84,7 +84,7 @@ extension EventDispatcher: EventDispatching {
             }
 
             do {
-                let props = try make(with: event)
+                let props = try make(with: event, encoder: event.encoder)
                 let processors = processors.filter(\.isTechnicalEnabled)
                 for processor in processors {
                     processor.send(Event.name, properties: props)
@@ -105,7 +105,7 @@ extension EventDispatcher: EventDispatching {
                 let processors = processors.filter(\.isEnabled)
                 for processor in processors {
                     if let event = event.customized(for: processor.name) {
-                        let props = try make(with: event.body)
+                        let props = try make(with: event.body, encoder: event.encoder)
                         processor.send(event.name, properties: props)
                     }
                 }

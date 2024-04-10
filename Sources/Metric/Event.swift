@@ -1,7 +1,14 @@
 import Foundation
 
-public protocol Event: Encodable, CustomStringConvertible, CustomDebugStringConvertible {
+public protocol Event: Encodable, CustomDebugStringConvertible {
     static var name: EventName { get }
+    var encoder: JSONEncoder { get }
+}
+
+public extension Event {
+    var encoder: JSONEncoder {
+        return .init()
+    }
 }
 
 // MARK: - CustomStringConvertible

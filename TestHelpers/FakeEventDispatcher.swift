@@ -1,5 +1,5 @@
-import Foundation
 import EventDispatcherKit
+import Foundation
 import SpryKit
 
 public final class FakeEventDispatcher: EventDispatching, Spryable {
@@ -12,7 +12,7 @@ public final class FakeEventDispatcher: EventDispatching, Spryable {
         case setIsEnabled = "set(enabled:)"
         case setIsEnabledWithName = "set(enabled:for:)"
 
-        case sendNamed = "send(_:body:)"
+        case sendNamed = "send(_:body:encoder:)"
         case send = "send(_:)"
         case setUserId = "set(userId:)"
     }
@@ -33,8 +33,8 @@ public final class FakeEventDispatcher: EventDispatching, Spryable {
         return spryify(arguments: enabled, name)
     }
 
-    public func send(_ name: EventName, body: some Encodable) {
-        return spryify(arguments: name, body)
+    public func send<B: Encodable>(_ name: EventName, body: B, encoder: JSONEncoder) {
+        return spryify(arguments: name, body, encoder)
     }
 
     public func send(_ event: some Event) {

@@ -4,12 +4,15 @@ public final class ConsoleEventProcessor {
     public typealias Logger = (Any...) -> Void
 
     public private(set) var isEnabled: Bool = true
+    public var isTechnical: Bool
 
     private let logger: Logger
     private let prettyPrinted: Bool
 
     public init(logger: Logger? = nil,
-                prettyPrinted: Bool = true) {
+                prettyPrinted: Bool = true,
+                isTechnical: Bool) {
+        self.isTechnical = isTechnical
         self.prettyPrinted = prettyPrinted
         self.logger = logger ?? {
             debugPrint($0)
@@ -22,10 +25,6 @@ public final class ConsoleEventProcessor {
 extension ConsoleEventProcessor: EventProcessor {
     public var name: EventProcessorName {
         return .console
-    }
-
-    public var isTechnical: Bool {
-        return true
     }
 
     public func send(_ name: EventName, properties: Properties) {
@@ -48,7 +47,7 @@ extension ConsoleEventProcessor: EventProcessor {
 private extension Dictionary {
     func prettyJsonString() -> String? {
         if JSONSerialization.isValidJSONObject(self) {
-            let data: Data? = try? JSONSerialization.data(withJSONObject: self, options: [.sortedKeys, .prettyPrinted])
+            let data: Data? = try? JSONSerialization.data(withJSONObject: self, options: [.sortedKeys, .prettyPrinted, .withoutEscapingSlashes])
             if let data {
                 return String(data: data, encoding: .utf8)
             }

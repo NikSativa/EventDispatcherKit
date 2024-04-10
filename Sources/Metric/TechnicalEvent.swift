@@ -4,6 +4,13 @@ import Foundation
 /// sends only to event processor which **EventProcessor.isTechnical == true**
 public protocol TechnicalEvent: Encodable, CustomStringConvertible, CustomDebugStringConvertible {
     static var name: EventName { get }
+    var encoder: JSONEncoder { get }
+}
+
+public extension TechnicalEvent {
+    var encoder: JSONEncoder {
+        return .init()
+    }
 }
 
 // MARK: - CustomStringConvertible

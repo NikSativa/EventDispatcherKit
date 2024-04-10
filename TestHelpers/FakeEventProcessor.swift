@@ -1,5 +1,5 @@
-import Foundation
 import EventDispatcherKit
+import Foundation
 import SpryKit
 
 public final class FakeEventProcessor: EventProcessor, Spryable {

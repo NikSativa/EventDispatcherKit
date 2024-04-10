@@ -1,6 +1,6 @@
 import Foundation
-import Threading
 import SpryKit
+import Threading
 import XCTest
 
 @testable import EventDispatcherKit
