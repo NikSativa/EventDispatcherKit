@@ -36,25 +36,30 @@ final class MultiThreadEventDispatcherTests: XCTestCase {
     func test_multi_event() {
         let numberOfEvents = 1000
 
-        Queue.background.asyncAfter(deadline: .now() + 0.1) {
-            for i in 0...numberOfEvents {
+        var expects: [XCTestExpectation] = []
+        for i in 0...numberOfEvents {
+            let exp = expectation(description: "Event background \(i)")
+            expects.append(exp)
+
+            Queue.background.asyncAfter(deadline: .now() + 0.1) {
                 let event = Event(key: "\(i) + background")
                 self.subject.send(event)
+                exp.fulfill()
             }
         }
 
-        Queue.main.asyncAfter(deadline: .now() + 0.1) {
-            for i in 0...numberOfEvents {
+        for i in 0...numberOfEvents {
+            let exp = expectation(description: "Event background \(i)")
+            expects.append(exp)
+
+            Queue.main.asyncAfter(deadline: .now() + 0.1) {
                 let event = Event(key: "\(i) + main")
                 self.subject.send(event)
+                exp.fulfill()
             }
         }
 
-        #if os(visionOS) || os(watchOS)
-        wait(timeout: 1)
-        #else
-        wait(timeout: 0.3)
-        #endif
+        wait(for: expects, timeout: 5)
 
         let mainEvents: [FakeEventProcessor.Event] = (0...numberOfEvents).map { i in
             return .init(name: NameKind.simple.rawValue, properties: ["key": "\(i) + main"])
@@ -95,17 +100,10 @@ private extension MultiThreadEventDispatcherTests {
         let key: String
     }
 
-    func wait(timeout: TimeInterval? = nil) {
+    func wait(timeout: TimeInterval = 1) {
         let exp = expectation(description: "wait")
         exp.isInverted = true
-
-        let defaultTimeOut: TimeInterval
-        #if os(visionOS) || os(watchOS)
-        defaultTimeOut = 1
-        #else
-        defaultTimeOut = 0.1
-        #endif
-        wait(for: [exp], timeout: timeout ?? defaultTimeOut)
+        wait(for: [exp], timeout: timeout)
     }
 }
 
