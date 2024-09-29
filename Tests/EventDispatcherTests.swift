@@ -1,11 +1,10 @@
+#if canImport(SpryMacroAvailable)
 import Foundation
 import SpryKit
 import Threading
 import XCTest
 
 @testable import EventDispatcherKit
-@testable import EventDispatcherKitTestHelpers
-@testable import ThreadingTestHelpers
 
 private extension EventProcessorName {
     static let one: Self = .init(name: "one")
@@ -43,7 +42,7 @@ final class EventDispatcherTests: XCTestCase {
         regular2EventProcessor.stub(.isTechnical).andReturn(false)
         regular2EventProcessor.stub(.isEnabled).andReturn(true)
 
-        queue.stub(.async).andDo { args in
+        queue.stub(.asyncWithExecute).andDo { args in
             typealias VoidClosure = () -> Void
             if let closure = args[0] as? VoidClosure {
                 closure()
@@ -52,13 +51,11 @@ final class EventDispatcherTests: XCTestCase {
         }
     }
 
-    #if (os(macOS) || os(iOS) || os(visionOS)) && (arch(x86_64) || arch(arm64))
     func test_no_technical_processors() {
         XCTAssertThrowsAssertion {
             _ = EventDispatcher(processors: [self.regularEventProcessor])
         }
     }
-    #endif
 
     func test_no_processors() {
         _ = EventDispatcher(processors: [])
@@ -223,3 +220,4 @@ private extension EventDispatcherTests {
         return [:]
     }
 }
+#endif

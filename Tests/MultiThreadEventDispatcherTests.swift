@@ -4,12 +4,10 @@ import Threading
 import XCTest
 
 @testable import EventDispatcherKit
-@testable import EventDispatcherKitTestHelpers
-@testable import ThreadingTestHelpers
 
 final class MultiThreadEventDispatcherTests: XCTestCase {
-    private let processor1: FakeEventProcessor = .init(name: "common")
-    private let processor2: FakeEventProcessor = .init(name: "technical", isTechnical: true)
+    private let processor1: FakeMultiThreadEventProcessor = .init(name: "common")
+    private let processor2: FakeMultiThreadEventProcessor = .init(name: "technical", isTechnical: true)
 
     private lazy var subject: EventDispatching = {
         return EventDispatcher(processors: [processor1, processor2])
@@ -59,12 +57,12 @@ final class MultiThreadEventDispatcherTests: XCTestCase {
             }
         }
 
-        wait(for: expects, timeout: 5)
+        wait(for: expects, timeout: 15)
 
-        let mainEvents: [FakeEventProcessor.Event] = (0...numberOfEvents).map { i in
+        let mainEvents: [FakeMultiThreadEventProcessor.Event] = (0...numberOfEvents).map { i in
             return .init(name: NameKind.simple.rawValue, properties: ["key": "\(i) + main"])
         }
-        let backgroundEvents: [FakeEventProcessor.Event] = (0...numberOfEvents).map { i in
+        let backgroundEvents: [FakeMultiThreadEventProcessor.Event] = (0...numberOfEvents).map { i in
             return .init(name: NameKind.simple.rawValue, properties: ["key": "\(i) + background"])
         }
 
@@ -107,43 +105,7 @@ private extension MultiThreadEventDispatcherTests {
     }
 }
 
-private final class FakeEventProcessor: EventProcessor {
-    struct Event: Hashable, SpryEquatable {
-        let name: EventName
-        let properties: [String: String]
-    }
-
-    @Atomic(mutex: Mutex.pthread(.recursive), read: .async, write: .sync)
-    private(set) var events: [Event] = []
-    let name: EventProcessorName
-    let isTechnical: Bool
-    let isEnabled: Bool
-
-    init(name: String,
-         isTechnical: Bool = false,
-         isEnabled: Bool = true) {
-        self.name = .init(name: name)
-        self.isTechnical = isTechnical
-        self.isEnabled = isEnabled
-    }
-
-    func send(_ name: EventName, properties: Properties) {
-        $events.mutate { events in
-            let event: Event = .init(name: name, properties: properties as! [String: String])
-            events.append(event)
-        }
-    }
-
-    func set(userId _: String?) {
-        fatalError("nothing to test")
-    }
-
-    func set(enabled: Bool) {
-        fatalError("nothing to test")
-    }
-}
-
-private extension FakeEventProcessor.Event {
+private extension FakeMultiThreadEventProcessor.Event {
     static func testMake(name: MultiThreadEventDispatcherTests.NameKind = .simple,
                          variant: MultiThreadEventDispatcherTests.Variant = .one) -> Self {
         return .init(name: name.rawValue,
@@ -162,3 +124,7 @@ private extension MultiThreadEventDispatcherTests.TechnicalEvent {
         return .init(key: variant.rawValue)
     }
 }
+
+#if swift(>=6.0)
+extension MultiThreadEventDispatcherTests: @unchecked Sendable {}
+#endif

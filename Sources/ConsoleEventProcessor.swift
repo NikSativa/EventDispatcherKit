@@ -55,3 +55,7 @@ private extension Dictionary {
         return nil
     }
 }
+
+#if swift(>=6.0)
+extension ConsoleEventProcessor: @unchecked Sendable {}
+#endif

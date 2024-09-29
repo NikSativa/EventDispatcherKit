@@ -54,3 +54,7 @@ extension EventName: CustomDebugStringConvertible {
         return value
     }
 }
+
+#if swift(>=6.0)
+extension EventName: Sendable {}
+#endif

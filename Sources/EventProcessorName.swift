@@ -64,3 +64,7 @@ extension EventProcessorName: CustomDebugStringConvertible {
         return name
     }
 }
+
+#if swift(>=6.0)
+extension EventProcessorName: Sendable {}
+#endif

@@ -2,9 +2,13 @@ import Foundation
 import Threading
 
 public final class EventDispatcher {
-    /// json root key when serialized properties are not eqvivalent of EventProcessor.Properties
-    /// the result will look like **[rootKey: EventProcessor.Properties]**
+    // json root key when serialized properties are not eqvivalent of EventProcessor.Properties
+    // the result will look like **[rootKey: EventProcessor.Properties]**
+    #if swift(>=6.0)
+    public nonisolated(unsafe) static var rootKey: String = "body"
+    #else
     public static var rootKey: String = "body"
+    #endif
 
     private static let defaultQueue: Queueable = Queue.custom(label: "EventDispatcherKit",
                                                               qos: .background,
@@ -59,6 +63,25 @@ extension EventDispatcher: EventDispatching {
         }
     }
 
+    #if swift(>=6.0)
+    public func send(_ name: EventName, body: some Encodable & Sendable, encoder: JSONEncoder) {
+        queue.async { [self] in
+            guard isEnabled else {
+                return
+            }
+
+            do {
+                let props = try make(with: body, encoder: encoder)
+                let processors = processors.filter(\.isEnabled)
+                for processor in processors {
+                    processor.send(name, properties: props)
+                }
+            } catch {
+                assertionFailure("can't serialize \(error.localizedDescription)\nname: \(name)\nbody: \(String(describing: body))")
+            }
+        }
+    }
+    #else
     public func send(_ name: EventName, body: some Encodable, encoder: JSONEncoder) {
         queue.async { [self] in
             guard isEnabled else {
@@ -76,6 +99,7 @@ extension EventDispatcher: EventDispatching {
             }
         }
     }
+    #endif
 
     public func send<Event: TechnicalEvent>(_ event: Event) {
         queue.async { [self] in
@@ -121,3 +145,7 @@ private extension EventProcessor {
         return isTechnical && isEnabled
     }
 }
+
+#if swift(>=6.0)
+extension EventDispatcher: @unchecked Sendable {}
+#endif

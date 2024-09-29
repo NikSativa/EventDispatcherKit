@@ -12,12 +12,11 @@ let package = Package(
         .watchOS(.v6)
     ],
     products: [
-        .library(name: "EventDispatcherKit", targets: ["EventDispatcherKit"]),
-        .library(name: "EventDispatcherKitTestHelpers", targets: ["EventDispatcherKitTestHelpers"])
+        .library(name: "EventDispatcherKit", targets: ["EventDispatcherKit"])
     ],
     dependencies: [
-        .package(url: "https://github.com/NikSativa/Threading.git", .upToNextMajor(from: "1.3.5")),
-        .package(url: "https://github.com/NikSativa/SpryKit.git", .upToNextMajor(from: "2.2.3"))
+        .package(url: "https://github.com/NikSativa/SpryKit.git", .upToNextMajor(from: "3.0.0")),
+        .package(url: "https://github.com/NikSativa/Threading.git", .upToNextMajor(from: "2.0.0"))
     ],
     targets: [
         .target(name: "EventDispatcherKit",
@@ -26,24 +25,13 @@ let package = Package(
                 ],
                 path: "Sources",
                 resources: [
-                    .copy("../PrivacyInfo.xcprivacy")
-                ]),
-        .target(name: "EventDispatcherKitTestHelpers",
-                dependencies: [
-                    "EventDispatcherKit",
-                    "SpryKit"
-                ],
-                path: "TestHelpers",
-                resources: [
-                    .copy("../PrivacyInfo.xcprivacy")
+                    .process("PrivacyInfo.xcprivacy")
                 ]),
         .testTarget(name: "EventDispatcherKitTests",
                     dependencies: [
                         "Threading",
-                        .product(name: "ThreadingTestHelpers", package: "Threading"),
                         "SpryKit",
                         "EventDispatcherKit",
-                        "EventDispatcherKitTestHelpers"
                     ],
                     path: "Tests")
     ]
