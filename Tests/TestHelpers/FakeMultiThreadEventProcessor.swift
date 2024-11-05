@@ -8,7 +8,7 @@ final class FakeMultiThreadEventProcessor: EventProcessor {
         let properties: [String: String]
     }
 
-    @Atomic(mutex: Mutex.pthread(.recursive), read: .async, write: .sync)
+    @Atomic(mutex: AnyMutex.pthread(.recursive), read: .async, write: .sync)
     private(set) var events: [Event] = []
     let name: EventProcessorName
     let isTechnical: Bool

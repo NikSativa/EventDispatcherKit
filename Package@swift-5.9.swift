@@ -16,8 +16,8 @@ let package = Package(
         .library(name: "EventDispatcherKit", targets: ["EventDispatcherKit"])
     ],
     dependencies: [
-        .package(url: "https://github.com/NikSativa/SpryKit.git", .upToNextMajor(from: "3.0.0")),
-        .package(url: "https://github.com/NikSativa/Threading.git", .upToNextMajor(from: "2.0.0"))
+        .package(url: "https://github.com/NikSativa/SpryKit.git", .upToNextMajor(from: "3.0.1")),
+        .package(url: "https://github.com/NikSativa/Threading.git", .upToNextMajor(from: "2.1.0"))
     ],
     targets: [
         .target(name: "EventDispatcherKit",
