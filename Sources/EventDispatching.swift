@@ -13,10 +13,10 @@ public protocol EventDispatching: Sendable {
     /// enabled/disable processor **individually** by name
     func set(enabled: Bool, for name: EventProcessorName)
 
-    func send<B: Encodable & Sendable>(_ name: EventName, body: B, encoder: JSONEncoder)
-    func send<E: Event>(_ event: E)
-    func send<E: TechnicalEvent>(_ event: E)
-    func send<E: CustomizableEvent>(_ event: E)
+    func send(_ name: EventName, body: some Encodable & Sendable, encoder: JSONEncoder)
+    func send(_ event: some Event)
+    func send(_ event: some TechnicalEvent)
+    func send(_ event: some CustomizableEvent)
 }
 
 public extension EventDispatching {
@@ -24,7 +24,7 @@ public extension EventDispatching {
         send(E.name, body: event)
     }
 
-    func send<B: Encodable & Sendable>(_ name: EventName, body: B) {
+    func send(_ name: EventName, body: some Encodable & Sendable) {
         send(name, body: body, encoder: .init())
     }
 }
@@ -41,10 +41,10 @@ public protocol EventDispatching {
     /// enabled/disable processor **individually** by name
     func set(enabled: Bool, for name: EventProcessorName)
 
-    func send<B: Encodable>(_ name: EventName, body: B, encoder: JSONEncoder)
-    func send<E: Event>(_ event: E)
-    func send<E: TechnicalEvent>(_ event: E)
-    func send<E: CustomizableEvent>(_ event: E)
+    func send(_ name: EventName, body: some Encodable, encoder: JSONEncoder)
+    func send(_ event: some Event)
+    func send(_ event: some TechnicalEvent)
+    func send(_ event: some CustomizableEvent)
 }
 
 public extension EventDispatching {
@@ -52,7 +52,7 @@ public extension EventDispatching {
         send(E.name, body: event)
     }
 
-    func send<B: Encodable>(_ name: EventName, body: B) {
+    func send(_ name: EventName, body: some Encodable) {
         send(name, body: body, encoder: .init())
     }
 }

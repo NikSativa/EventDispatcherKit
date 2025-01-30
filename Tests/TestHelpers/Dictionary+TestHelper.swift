@@ -18,6 +18,7 @@ private extension JSONSerialization {
         guard JSONSerialization.isValidJSONObject(object) else {
             return nil
         }
+
         return try? JSONSerialization.data(withJSONObject: object, options: [.sortedKeys, .prettyPrinted])
     }
 }

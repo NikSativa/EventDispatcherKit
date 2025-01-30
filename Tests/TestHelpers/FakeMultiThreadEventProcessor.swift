@@ -8,7 +8,7 @@ final class FakeMultiThreadEventProcessor: EventProcessor {
         let properties: [String: String]
     }
 
-    @Atomic(mutex: AnyMutex.pthread(.recursive), read: .async, write: .sync)
+    @AtomicValue
     private(set) var events: [Event] = []
     let name: EventProcessorName
     let isTechnical: Bool
@@ -23,7 +23,7 @@ final class FakeMultiThreadEventProcessor: EventProcessor {
     }
 
     func send(_ name: EventName, properties: Properties) {
-        $events.mutate { events in
+        $events.syncUnchecked { events in
             let event: Event = .init(name: name, properties: properties as! [String: String])
             events.append(event)
         }

@@ -2,7 +2,6 @@ import Foundation
 import SpryKit
 import Threading
 import XCTest
-
 @testable import EventDispatcherKit
 
 final class MultiThreadEventDispatcherTests: XCTestCase {
